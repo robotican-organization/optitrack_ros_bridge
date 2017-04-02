@@ -1,118 +1,112 @@
-optitrack
-=========
+# optitrack_ros_bridge
+This package is a modified [Optitrack](https://github.com/crigroup/optitrack) package, that was created to suit the needs of Robotican use cases.
 
-ROS package developed by the [Control Robotics Intelligence Group](http://www.ntu.edu.sg/home/cuong/) from the [Nanyang Technological University, Singapore](http://www.ntu.edu.sg). This package allows to receive in ROS the rigid bodies streamed by Motive 1.7.
+# Getting started
 
-The **hydro-devel** branch is compatible with both ROS **Hydro** and **Indigo**.
+## prerequisite
 
-### Our setup
-  * Optitrack with six Prime 17W cameras.
-  * Motive 1.7.5 running on Windows 7, 64 bits.
-  * ROS Hydro (Ubuntu 12.04, 64 bits) or ROS Indigo (Ubuntu 14.04, 64 bits)
+### On server PC
 
-**Maintainer:** Francisco Suárez Ruiz, [fsuarez6.github.io](fsuarez6.github.io)
+#### Install Motive sofware version 1.10.2
 
-### Documentation
-  * See the installation instructions below.
-  * Throughout the various files in this repository.
-  
-### Build Status
+1. Plug in OptiTrack dongle
+2. Open Motive software
+3. Insert liscense file if necessary
+4. Inside Motive calibrate OptiTrack cameras
+http://wiki.optitrack.com/index.php?title=Calibration
 
-[![Build Status](https://travis-ci.org/crigroup/optitrack.png?branch=hydro-devel)](https://travis-ci.org/crigroup/optitrack)
+You are now ready to set Motive connection to publish OptiTrack data to client PC:
+1. Inside motive 
+	open Streaming panel: click View -> Data Streaming
+	On Streaming panel:
+		Select your local IP address under "Local Interface"
+		Make sure "Stream rigid bodies" is set to true.
+		Make sure "Type" is set to "Multicast"
+		Make sure "Data port" is set to 1511
+		Insert client machine IP inside "Multicast interface"
+		Check "Broadcast Frame Data" on top of the panel, and make sure "NET" label is light up (bottom-right corner of screen)
+		
+<img src="/resources/images/instructions/motive.gif" width="500" height="300" />
 
+### On client PC
 
-# Installation
+#### Install Ubuntu 14.04
+http://howtoubuntu.org/how-to-install-ubuntu-14-04-trusty-tahr
 
-## Ubuntu 12.04 (Precise)
+#### Install ROS Indigo
+http://wiki.ros.org/indigo/Installation/Ubuntu
 
-  1. Install [ROS Hydro](http://wiki.ros.org/hydro/Installation/Ubuntu) (**Base Install** Recommended)
-```bash
-# Setup your sources.list
-$ sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu precise main" > /etc/apt/sources.list.d/ros-latest.list'
-# Set up your keys
-$ wget https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -O - | sudo apt-key add -
-# Install
-$ sudo apt-get update
-$ sudo apt-get install ros-hydro-ros-base
-``` 
-  2. Install the `python-optrix` library:
+OptiTrack repository depends on optirx 1.9 repository.
+Install the python-optrix library:
 ```
 $ pip install optirx --user
-``` 
+```
 
-### Repository Installation
-
+OptiTrack Repository Installation
 Go to your ROS working directory. e.g.
 ```
 $ cd ~/catkin_ws/src
-``` 
-Clone the required repositories:
 ```
-$ git clone https://github.com/crigroup/optitrack.git -b hydro-devel
-$ git clone https://github.com/gt-ros-pkg/hrl-kdl.git -b hydro
-``` 
-Install any missing dependencies using rosdep:
-```
-$ rosdep update
-$ rosdep install --from-paths . --ignore-src --rosdistro hydro -y
-``` 
-Now compile your ROS workspace. e.g.
-```
-$ cd ~/catkin_ws && catkin_make
-``` 
 
-## Ubuntu 14.04 (Trusty)
-
-  1. Install [ROS Indigo](http://wiki.ros.org/indigo/Installation/Ubuntu) (**Base Install** Recommended)
-```bash
-# Setup your sources.list
-$ sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
-# Set up your keys
-$ sudo apt-key adv --keyserver hkp://pool.sks-keyservers.net:80 --recv-key 5523BAEEB01FA116
-# Install
-$ sudo apt-get update
-$ sudo apt-get install ros-indigo-ros-base
-``` 
-  2. Install the `python-optrix` library:
+Clone the this repository:
 ```
-$ pip install optirx --user
-``` 
-
-### Repository Installation
-
-Go to your ROS working directory. e.g.
+git clone https://github.com/elhayrobotican/optitrack_ros_bridge.git
 ```
-$ cd ~/catkin_ws/src
-``` 
-Clone the required repositories:
-```
-$ git clone https://github.com/crigroup/optitrack.git -b hydro-devel
-$ git clone https://github.com/gt-ros-pkg/hrl-kdl.git -b indigo-devel
-``` 
+
 Install any missing dependencies using rosdep:
 ```
 $ rosdep update
 $ rosdep install --from-paths . --ignore-src --rosdistro indigo -y
-``` 
+```
+
 Now compile your ROS workspace. e.g.
 ```
 $ cd ~/catkin_ws && catkin_make
-``` 
-
-## Testing the Installation
-
-Be sure to always source the appropriate ROS setup file, e.g:
 ```
-$ source ~/catkin_ws/devel/setup.bash
-``` 
-You might want to add that line to your `~/.bashrc`
 
-Try the following commands (one per terminal):
+#### preparation 
+
+Optitrack transfer information using NetNat protocol. Make sure the protocol version
+is correct (if not, the repository will not be able to decode incoming packages from Motive software).
+The correct version depends on what version Motive software is using. The optirx repository documentation defines the latest supported version.
+For optirx documentation go to: https://pypi.python.org/pypi/optirx
+
+Open rigid_bodies_publisher.py :
 ```
-$ roslaunch optitrack optitrack_pipeline.launch iface:=eth1
-$ rostopic echo /optitrack/rigid_bodies
-``` 
+$ gedit ~/catkin_ws/src/optitrack/scripts/rigid_bodies_publisher.py
+```
+make sure that NatNet version located in line 43 is correct. The most up to date version at the time of writing these lines is 2.9.0.0 :
+```
+version = (2, 9, 0, 0)  # the latest SDK version
+```
 
-## Changelog
-### 0.1.0 (2015-10-20)
-* Initial Release
+In case you made some changes, don't forget to compile catkin workspace again
+
+# Usage
+
+Launch optitrack:
+```
+$ roslaunch optitrack optitrack_pipeline.launch iface:=wlan0
+```
+iface argument is a must. It specify the interface you are using in order to listen to NetNat packages.
+After launching optitrack, your local IP will automatically be identified and used
+to listen to packages over the selected interface. 
+Launching optitrack_pipeline.launch load rigid_bodies.yaml config file and Rviz will appear on screen. 
+
+<img src="/resources/images/instructions/launching_optitrack.gif" width="500" height="300" />
+
+You can also open RQT to get the ability to watch topics, tf tree etc.
+To do so, just close RViz, and open rqt while rigid_bodies_publisher node is still running:
+```
+$ rqt
+```
+Inside rqt:
+1. Select "world" for "Fixed frame" property
+2. Add tf/axis and select rigid_body_[id]. repeat this step for every rigid body you want to present
+
+<img src="/resources/images/instructions/launching_tf_in_rqt.gif" width="500" height="300" />
+
+In rqt you can monitor published topics. i.e: in order to view rigid body markers, open topic monitor and select to appropriate topic.
+
+<img src="/resources/images/instructions/markers_in_rqt.gif " width="500" height="300" />
+
