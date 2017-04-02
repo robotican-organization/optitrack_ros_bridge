@@ -50,7 +50,7 @@ $ cd ~/catkin_ws/src
 
 Clone the this repository:
 ```
-git clone https://github.com/elhayrobotican/optitrack_ros_bridge.git
+git clone https://github.com/robotican-organization/optitrack_ros_bridge.git
 ```
 
 Install any missing dependencies using rosdep:
@@ -73,7 +73,7 @@ For optirx documentation go to: https://pypi.python.org/pypi/optirx
 
 Open rigid_bodies_publisher.py :
 ```
-$ gedit ~/catkin_ws/src/optitrack/scripts/rigid_bodies_publisher.py
+$ gedit ~/catkin_ws/src/optitrac_ros_bridge/scripts/rigid_bodies_publisher.py
 ```
 make sure that NatNet version located in line 43 is correct. The most up to date version at the time of writing these lines is 2.9.0.0 :
 ```
