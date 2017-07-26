@@ -59,6 +59,11 @@ $ rosdep update
 $ rosdep install --from-paths . --ignore-src --rosdistro indigo -y
 ```
 
+Clone <a href="https://github.com/gt-ros-pkg/hrl-kdl">hrl-kdl</a> package to your catkin repository, and then compile:
+```
+$ git clone https://github.com/gt-ros-pkg/hrl-kdl.git -b indigo-devel
+```
+
 Now compile your ROS workspace. e.g.
 ```
 $ cd ~/catkin_ws && catkin_make
