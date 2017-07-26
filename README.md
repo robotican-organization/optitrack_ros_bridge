@@ -26,7 +26,7 @@ You are now ready to set Motive connection to publish OptiTrack data to client P
 		Insert client machine IP inside "Multicast interface"
 		Check "Broadcast Frame Data" on top of the panel, and make sure "NET" label is light up (bottom-right corner of screen)
 		
-<img src="/resources/images/instructions/motive.gif" width="500" height="300" />
+<img src="/images/instructions/motive.gif" width="500" height="300" />
 
 ### On client PC
 
@@ -42,16 +42,12 @@ Install the python-optrix library:
 $ pip install optirx --user
 ```
 
-OptiTrack Repository Installation
-Go to your ROS working directory. e.g.
-```
-$ cd ~/catkin_ws/src
-```
-
 Clone the this repository:
 ```
 git clone https://github.com/robotican-organization/optitrack_ros_bridge.git
 ```
+
+Go to optitrack_ros_bridge/src folder, and copy the repositories (hrl_kdl and interactive_markers) inside it to your catkin workspace. 
 
 Install any missing dependencies using rosdep:
 ```
@@ -59,12 +55,7 @@ $ rosdep update
 $ rosdep install --from-paths . --ignore-src --rosdistro indigo -y
 ```
 
-Clone <a href="https://github.com/gt-ros-pkg/hrl-kdl">hrl-kdl</a> package to your catkin repository, and then compile:
-```
-$ git clone https://github.com/gt-ros-pkg/hrl-kdl.git -b indigo-devel
-```
-
-Now compile your ROS workspace. e.g.
+Now compile your catkin workspace. e.g.
 ```
 $ cd ~/catkin_ws && catkin_make
 ```
@@ -98,7 +89,7 @@ After launching optitrack, your local IP will automatically be identified and us
 to listen to packages over the selected interface. 
 Launching optitrack_pipeline.launch load rigid_bodies.yaml config file and Rviz will appear on screen. 
 
-<img src="/resources/images/instructions/launching_optitrack.gif" width="500" height="300" />
+<img src="/images/instructions/launching_optitrack.gif" width="500" height="300" />
 
 You can also open RQT to get the ability to watch topics, tf tree etc.
 To do so, just close RViz, and open rqt while rigid_bodies_publisher node is still running:
@@ -109,9 +100,9 @@ Inside rqt:
 1. Select "world" for "Fixed frame" property
 2. Add tf/axis and select rigid_body_[id]. repeat this step for every rigid body you want to present
 
-<img src="/resources/images/instructions/launching_tf_in_rqt.gif" width="500" height="300" />
+<img src="/images/instructions/launching_tf_in_rqt.gif" width="500" height="300" />
 
 In rqt you can monitor published topics. i.e: in order to view rigid body markers, open topic monitor and select to appropriate topic.
 
-<img src="/resources/images/instructions/markers_in_rqt.gif " width="500" height="300" />
+<img src="/images/instructions/markers_in_rqt.gif " width="500" height="300" />
 
